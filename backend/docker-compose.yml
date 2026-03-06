@@ -1,0 +1,12 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: codeathon-db
+    environment:
+      POSTGRES_DB: codeathon_team_dashboard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data

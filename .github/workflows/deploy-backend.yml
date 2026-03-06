@@ -1,0 +1,89 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build JAR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests -B
+        working-directory: backend
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/target/*.jar
+          retention-days: 1
+
+  deploy:
+    name: Deploy to EC2
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+          path: ./artifact
+
+      - name: Copy JAR to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "artifact/*.jar"
+          target: "/home/${{ secrets.EC2_USER }}/app"
+          strip_components: 1
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            APP_DIR="/home/${{ secrets.EC2_USER }}/app"
+
+            # Stop and remove old container if exists
+            docker stop codeathon-backend 2>/dev/null || true
+            docker rm codeathon-backend 2>/dev/null || true
+
+            # Run new container using JRE image with the pre-built JAR
+            docker run -d \
+              --name codeathon-backend \
+              --restart unless-stopped \
+              -p 8080:8080 \
+              -v "$APP_DIR:/app" \
+              -e DATASOURCE_URL="${{ secrets.DATASOURCE_URL }}" \
+              -e DATASOURCE_USERNAME="${{ secrets.DATASOURCE_USERNAME }}" \
+              -e DATASOURCE_PASSWORD="${{ secrets.DATASOURCE_PASSWORD }}" \
+              -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+              -e CORS_ALLOWED_ORIGINS="${{ secrets.CORS_ALLOWED_ORIGINS }}" \
+              -e ADMIN_USERNAME="${{ secrets.ADMIN_USERNAME }}" \
+              -e ADMIN_PASSWORD="${{ secrets.ADMIN_PASSWORD }}" \
+              eclipse-temurin:21-jre \
+              sh -c "java -Duser.timezone=Asia/Kolkata -jar /app/*.jar"
+
+            # Prune unused images
+            docker image prune -f
