@@ -13,7 +13,7 @@ public class HealthController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public String healthCheck() {
-        return "Codeathon Team Dashboard Server is running";
+        return "Codeathon Team-Dashboard Server is running";
     }
 
 }

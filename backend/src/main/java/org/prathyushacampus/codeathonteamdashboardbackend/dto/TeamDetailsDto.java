@@ -5,19 +5,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.prathyushacampus.codeathonteamdashboardbackend.model.Member;
-import org.prathyushacampus.codeathonteamdashboardbackend.model.Theme;
-
-import java.util.List;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class RegisterTeamRequest {
+@AllArgsConstructor
+public class TeamDetailsDto {
     private String teamId;
-    private String password;
-
     private String teamName;
-    private List<Member> members;
-    private Theme theme;
+    private String theme;
+    private String psId;
+    private String psTitle;
+    private String buildingName;
+    private String floor;
+    private String tableNumber;
+    private int score;
+    private Member[] members;
 }

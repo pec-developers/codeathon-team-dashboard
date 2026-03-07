@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParticipantTeamProfileRequest {
-    private String teamName;
-    private String leaderName;
-    private String[] members;
-    private String theme;
+public class MemberDto {
+    private String name;
+    private String emailId;
 }
