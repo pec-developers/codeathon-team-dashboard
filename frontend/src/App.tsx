@@ -1,9 +1,16 @@
+import { TopBar } from "@/components/ui/top-bar"
 
 function App() {
   return (
-    <div className="w-screen flex flex-col items-center justify-center min-h-screen font-sans bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white text-center">
-      <h1 className="text-5xl mb-2">👋 <span className="bg-gradient-to-r from-[#a78bfa] to-[#60a5fa] bg-clip-text text-transparent">Hello World!</span></h1>
-      <p className="text-xl text-[#94a3b8]">Welcome to <strong>Codeathon 4.0</strong> Team Dashboard</p>
+    <div className="w-screen min-h-screen flex flex-col bg-background text-foreground relative z-10">
+      {/* Top Header Navigation */}
+      <TopBar />
+
+      {/* Main Content Workspace */}
+      <main className="flex-1 w-full max-w-[1400px] mx-auto p-6 md:p-10 flex flex-col items-center justify-center text-center">
+        {/* Dashboard content goes here */}
+        <p className="text-muted-foreground font-mono mt-12 opacity-50">Content Space</p>
+      </main>
     </div>
   )
 }
