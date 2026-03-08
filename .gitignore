@@ -58,5 +58,8 @@ build/
 .vscode/
 my_experimentation/
 
+### Environment Variables ###
+*.env
+
 ### Docker Compose Volumes ### 
 postgres_data/

@@ -4,9 +4,16 @@ import { StrangeTitle } from "@/components/ui/strange-title"
 import { Button } from "@/components/ui/button"
 import { LogOut, Menu, X } from "lucide-react"
 import { Description } from "./description"
+import { useAuthStore } from "@/lib/store"
 
 export function TopBar() {
   const [isOpen, setIsOpen] = useState(false)
+  const { isAuthenticated, logout } = useAuthStore()
+
+  const handleLogout = () => {
+    logout()
+    setIsOpen(false)
+  }
 
   return (
     <header className="sticky top-3 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm shadow-primary/5">
@@ -17,12 +24,14 @@ export function TopBar() {
         </div>
 
         {/* Right: Desktop Actions */}
-        <div className="hidden sm:flex items-center gap-4 shrink-0">
+        <div className="flex items-center gap-4 shrink-0">
           <ModeToggle />
-          <Button>
-            <LogOut className="w-4 h-4 mr-2" />
-            Sign Out
-          </Button>
+          {isAuthenticated && (
+            <Button className="hidden sm:flex" onClick={handleLogout}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+          )}
         </div>
 
         {/* Right: Mobile Menu Toggle */}
@@ -42,10 +51,12 @@ export function TopBar() {
               <ModeToggle />
             </div>
 
-            <Button className="w-full justify-center">
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </Button>
+            {isAuthenticated && (
+              <Button className="w-full justify-center" onClick={handleLogout}>
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
+            )}
           </div>
         </div>
       )}
