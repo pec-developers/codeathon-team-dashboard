@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProblemStatementRepository extends JpaRepository<ProblemStatement, String> {
+public interface ProblemStatementRepository extends JpaRepository<ProblemStatement, Long> {
     List<ProblemStatement> findByTheme(Theme theme);
 
     Optional<ProblemStatement> findByPsId(String psId);
