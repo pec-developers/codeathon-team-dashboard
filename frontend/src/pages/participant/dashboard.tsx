@@ -4,7 +4,8 @@ import { TeamDetailsView } from "./team-details-view.tsx";
 import { EventDetailsView } from "./event-details-view.tsx";
 import { LeaderboardView } from "./leaderboard-view.tsx";
 import { ContactView } from "./contact-view.tsx";
-import { Users, Info, Headset } from "lucide-react";
+import { ResourceHubView } from "./resource-hub-view.tsx";
+import { Users, Info, Headset, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function ParticipantDashboard() {
@@ -16,6 +17,7 @@ export function ParticipantDashboard() {
       case "team-details": return <TeamDetailsView />;
       case "event-details": return <EventDetailsView />;
       case "leaderboard": return <LeaderboardView />;
+      case "resource-hub": return <ResourceHubView />;
       case "contact": return <ContactView />;
       default: return <TeamDetailsView />;
     }
@@ -26,31 +28,45 @@ export function ParticipantDashboard() {
       {/* Sidebar - hidden on mobile */}
       <aside className="hidden md:flex w-fit min-w-64 max-w-72 shrink-0 flex-col gap-2 border-r pr-6 transition-all duration-300">
         <div className="mb-4">
-          <StrangeTitle as="h2" className="text-xl text-left px-4">
+          <StrangeTitle as="h3" className="text-xl text-left px-4">
             Dashboard
           </StrangeTitle>
         </div>
-        
+
         <button
           onClick={() => setSearchParams({ tab: "team-details" })}
           className={cn(
             "flex items-center gap-3 px-4 py-3 rounded-md transition-colors text-sm font-medium whitespace-nowrap",
-            activeTab === "team-details" 
-              ? "bg-primary text-primary-foreground" 
-              : "hover:bg-muted text-muted-foreground hover:text-foreground"
+            activeTab === "team-details"
+              ? "bg-primary/10 text-primary dark:bg-primary dark:text-primary-foreground border-primary"
+              : "hover:bg-muted text-muted-foreground hover:text-foreground border-transparent"
           )}
         >
           <Users className="w-4 h-4 shrink-0" />
           Team Details
         </button>
-        
+
+
+        <button
+          onClick={() => setSearchParams({ tab: "resource-hub" })}
+          className={cn(
+            "flex items-center gap-3 px-4 py-3 rounded-md transition-colors text-sm font-medium whitespace-nowrap",
+            activeTab === "resource-hub"
+              ? "bg-primary/10 text-primary dark:bg-primary dark:text-primary-foreground border-primary"
+              : "hover:bg-muted text-muted-foreground hover:text-foreground border-transparent"
+          )}
+        >
+          <Zap className="w-4 h-4 shrink-0" />
+          Resource Hub
+        </button>
+
         <button
           onClick={() => setSearchParams({ tab: "event-details" })}
           className={cn(
             "flex items-center gap-3 px-4 py-3 rounded-md transition-colors text-sm font-medium whitespace-nowrap",
-            activeTab === "event-details" 
-              ? "bg-primary text-primary-foreground" 
-              : "hover:bg-muted text-muted-foreground hover:text-foreground"
+            activeTab === "event-details"
+              ? "bg-primary/10 text-primary dark:bg-primary dark:text-primary-foreground border-primary"
+              : "hover:bg-muted text-muted-foreground hover:text-foreground border-transparent"
           )}
         >
           <Info className="w-4 h-4 shrink-0" />
@@ -74,9 +90,9 @@ export function ParticipantDashboard() {
           onClick={() => setSearchParams({ tab: "contact" })}
           className={cn(
             "flex items-center gap-3 px-4 py-3 rounded-md transition-colors text-sm font-medium whitespace-nowrap",
-            activeTab === "contact" 
-              ? "bg-primary text-primary-foreground" 
-              : "hover:bg-muted text-muted-foreground hover:text-foreground"
+            activeTab === "contact"
+              ? "bg-primary/10 text-primary dark:bg-primary dark:text-primary-foreground border-primary"
+              : "hover:bg-muted text-muted-foreground hover:text-foreground border-transparent"
           )}
         >
           <Headset className="w-4 h-4 shrink-0" />

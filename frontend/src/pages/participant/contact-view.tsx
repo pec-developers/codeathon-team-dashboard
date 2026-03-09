@@ -1,12 +1,19 @@
-import { Mail, Phone, Globe, MessageSquare } from "lucide-react";
+import { Phone } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 export function ContactView() {
-  const contacts = [
-    { role: "Faculty Coordinator", name: "Dr. John Doe", phone: "+91 9876543210" },
-    { role: "Event Manager", name: "Jane Smith", phone: "+91 8765432109" },
-    { role: "Technical Lead", name: "Alice Johnson", phone: "+91 7654321098" },
+  const technicalContacts = [
+    { role: "Technical Lead", name: "Meganathan", phone: "+91 9342453053" },
+    { role: "Technical Coordinator", name: "Anoob Krishna", phone: "+91 6381190918" },
+    { role: "Technical Coordinator", name: "Diwakar Raj", phone: "+91 9551331855" },
+    { role: "Technical Coordinator", name: "Gideon Jacob", phone: "+91 9003032644" },
+  ];
+
+  const generalContacts = [
+    { role: "Help Desk", name: "Kamalnath", phone: "+91 8248384760" },
+    { role: "Help Desk", name: "Keerthivasan", phone: "+91 8637667546" },
+    { role: "Help Desk", name: "Preeth", phone: "+91 9840841183" },
+    { role: "Help Desk", name: "Senthil Kumar", phone: "+91 7845570221" },
   ];
 
   return (
@@ -19,12 +26,35 @@ export function ContactView() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Organizing Committee</CardTitle>
-            <CardDescription>Reach out to specific personnel for urgent issues.</CardDescription>
+            <CardTitle>Technical POCs</CardTitle>
+            <CardDescription>Contact for technical support or platform issues.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {contacts.map((c, i) => (
+              {technicalContacts.map((c, i) => (
+                <div key={i} className="flex justify-between items-center p-3 rounded border bg-muted/20">
+                  <div>
+                    <p className="font-medium text-sm">{c.name}</p>
+                    <p className="text-xs text-muted-foreground">{c.role}</p>
+                  </div>
+                  <div className="flex items-center gap-1 text-sm text-primary">
+                    <Phone className="w-4 h-4" />
+                    <a href={`tel:${c.phone.replace(/ /g, '')}`} className="hover:underline">{c.phone}</a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>General Support</CardTitle>
+            <CardDescription>Contact for general queries, help, and emergencies.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {generalContacts.map((c, i) => (
                 <div key={i} className="flex justify-between items-center p-3 rounded border bg-muted/20">
                   <div>
                     <p className="font-medium text-sm">{c.name}</p>
@@ -40,40 +70,6 @@ export function ContactView() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>General Enquiries</CardTitle>
-            <CardDescription>We're here to help.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 border rounded bg-muted/50">
-                <Mail className="w-5 h-5 text-muted-foreground" />
-              </div>
-              <div>
-                <p className="text-sm font-medium">Email Us</p>
-                <a href="mailto:codeathon@prathyusha.edu.in" className="text-sm text-primary hover:underline">codeathon@prathyusha.edu.in</a>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="p-2 border rounded bg-muted/50">
-                <Globe className="w-5 h-5 text-muted-foreground" />
-              </div>
-              <div>
-                <p className="text-sm font-medium">Website</p>
-                <a href="https://prathyusha.edu.in" target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">prathyusha.edu.in</a>
-              </div>
-            </div>
-
-            <div className="border-t pt-4 flex flex-col items-center text-center space-y-3">
-              <p className="text-sm text-muted-foreground">Need immediate technical assistance?</p>
-              <Button variant="white" className="w-full gap-2">
-                <MessageSquare className="w-4 h-4"/> Chat with Volunteer
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

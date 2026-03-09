@@ -125,6 +125,13 @@ button.strange-style {
   }
 }
 
+/* Override for .dark class — ensures buttons don't inherit
+   the light-mode background when the OS is in light mode
+   but the app is in dark mode (common on mobile). */
+.dark button {
+  background-color: transparent;
+}
+
 .dark {
   --background: oklch(0.13 0 0); /* #050505 ≈ oklch(13% 0 0) */
   --foreground: oklch(0.90 0 0); /* #e0e0e0 ≈ oklch(90% 0 0) */

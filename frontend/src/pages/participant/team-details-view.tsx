@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { participantApi } from "@/lib/api-participant";
 import type { TeamDashboardResponse } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,7 @@ export function TeamDetailsView() {
   const [team, setTeam] = useState<TeamDashboardResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [completeProfilePassword, setCompleteProfilePassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchDashboard = async () => {
@@ -35,7 +37,15 @@ export function TeamDetailsView() {
 
   const handleCompleteProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!completeProfilePassword) return;
+    if (!completeProfilePassword || !confirmPassword) return;
+
+    if (completeProfilePassword !== confirmPassword) {
+      toast.error("Passwords do not match", {
+        description: "Please assure both passwords are exactly the same.",
+      });
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       await participantApi.completeProfile(completeProfilePassword);
@@ -117,16 +127,19 @@ export function TeamDetailsView() {
       </div>
 
       {!team.isProfileCompleted && (
-         <Card className="border-red-500/50 bg-red-500/5 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-red-600 dark:text-red-400">Complete Your Profile</CardTitle>
-            <CardDescription className="text-red-700/80 dark:text-red-300/80">
-              Your profile setup is incomplete. To access all dashboard features and participate in the Codeathon, you must set an access password now.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleCompleteProfile} className="flex gap-4 max-w-sm">
-              <div className="space-y-2 flex-grow">
+        <Dialog open={true} onOpenChange={() => {}}>
+          <DialogContent 
+            className="sm:max-w-md" 
+            showCloseButton={false}
+          >
+            <DialogHeader>
+              <DialogTitle className="text-red-600 dark:text-red-400">Complete Your Profile</DialogTitle>
+              <DialogDescription className="text-red-700/80 dark:text-red-300/80">
+                Your profile setup is incomplete. To access all dashboard features and participate in the Codeathon, you must set an access password now.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleCompleteProfile} className="flex flex-col gap-4">
+              <div className="space-y-2">
                 <Input 
                   type="password" 
                   placeholder="New Team Password" 
@@ -135,14 +148,21 @@ export function TeamDetailsView() {
                   required
                 />
               </div>
-              <div className="flex items-end">
-                <Button type="submit" variant="default" disabled={isSubmitting}>
-                  Confirm
-                </Button>
+              <div className="space-y-2">
+                <Input 
+                  type="password" 
+                  placeholder="Confirm Team Password" 
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  required
+                />
               </div>
+              <Button type="submit" variant="default" disabled={isSubmitting} className="w-full">
+                Confirm
+              </Button>
             </form>
-          </CardContent>
-        </Card>
+          </DialogContent>
+        </Dialog>
       )}
 
       {/* 1. Venue Info */}
@@ -201,9 +221,11 @@ export function TeamDetailsView() {
                     <p className="text-sm text-muted-foreground line-clamp-3 mb-4">{ps.psTitle}</p>
                   </div>
                   <div className="space-y-3">
-                    <a href={ps.psPdfLink} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
-                      <BookOpen className="w-3 h-3" /> View PDF Detals
-                    </a>
+                    {ps.psPdfLink && ps.psPdfLink.trim() !== "" && (
+                      <a href={ps.psPdfLink} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
+                        <BookOpen className="w-3 h-3" /> View PDF Details
+                      </a>
+                    )}
                     <Button 
                       className="w-full" 
                       onClick={() => handleFinalizePs(ps.psId)}
@@ -214,6 +236,39 @@ export function TeamDetailsView() {
                   </div>
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {team.isProfileCompleted && team.psReleased && team.psFinalized && team.problemStatements?.length > 0 && (
+        <Card className="border-green-500/50 bg-green-500/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-green-600 dark:text-green-400">
+              <CheckCircle2 className="w-5 h-5"/> Problem Statement Finalized
+            </CardTitle>
+            <CardDescription className="text-green-700/80 dark:text-green-300/80">
+              Your team has successfully finalized the problem statement below. You may proceed with your solution.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="border bg-background rounded-md p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">
+              <div>
+                <h4 className="font-semibold text-lg mb-1">{team.problemStatements[0].psId}</h4>
+                <p className="text-sm text-muted-foreground">{team.problemStatements[0].psTitle}</p>
+              </div>
+              {team.problemStatements[0].psPdfLink && team.problemStatements[0].psPdfLink.trim() !== "" && (
+                <a 
+                  href={team.problemStatements[0].psPdfLink} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="shrink-0"
+                >
+                  <Button variant="white" className="flex items-center gap-2">
+                    <BookOpen className="w-4 h-4" /> View PDF
+                  </Button>
+                </a>
+              )}
             </div>
           </CardContent>
         </Card>

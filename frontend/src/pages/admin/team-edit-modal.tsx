@@ -118,7 +118,8 @@ export function TeamEditModal({ team, open, onOpenChange, onSuccess }: TeamEditM
   const handleSaveMembers = async () => {
     setLoading(true);
     try {
-      await adminApi.updateTeamMembers(team.teamId, { members });
+      const membersWithoutId = members.map(({ id, ...rest }) => rest);
+      await adminApi.updateTeamMembers(team.teamId, { members: membersWithoutId });
       onSuccess();
       setMode("none");
     } catch (e) { console.error(e); } finally { setLoading(false); }
@@ -301,8 +302,8 @@ export function TeamEditModal({ team, open, onOpenChange, onSuccess }: TeamEditM
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>Problem Statement</Label>
-              {problemStatements.length === 0 ? (
-                <p className="text-sm text-muted-foreground italic">No problem statements available. Please create them first.</p>
+              {problemStatements.filter(ps => ps.theme === team.theme).length === 0 ? (
+                <p className="text-sm text-muted-foreground italic">No problem statements available for this team's theme ({team.theme}). Please create them first.</p>
               ) : (
                 <select
                   className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -310,9 +311,11 @@ export function TeamEditModal({ team, open, onOpenChange, onSuccess }: TeamEditM
                   onChange={(e) => setPsId(e.target.value)}
                 >
                   <option value="">-- Select Problem Statement --</option>
-                  {problemStatements.map(ps => (
+                  {problemStatements
+                    .filter(ps => ps.theme === team.theme)
+                    .map(ps => (
                     <option key={ps.psId} value={ps.psId}>
-                      [{ps.psId}] {ps.psTitle} ({ps.theme})
+                      [{ps.psId}] {ps.psTitle}
                     </option>
                   ))}
                 </select>

@@ -115,7 +115,8 @@ public class AdminTeamService {
         TeamDetails team = teamDetailsRepository.findById(teamId)
                 .orElseThrow(() -> new RuntimeException("Team not found"));
 
-        team.setMembers(new ArrayList<>(List.of(members)));
+        team.getMembers().clear();
+        team.getMembers().addAll(List.of(members));
 
         teamDetailsRepository.save(team);
     }
@@ -132,6 +133,7 @@ public class AdminTeamService {
         }
 
         team.setProblemStatement(problemStatement);
+        team.setPsFinalized(true);
         teamDetailsRepository.save(team);
     }
 }

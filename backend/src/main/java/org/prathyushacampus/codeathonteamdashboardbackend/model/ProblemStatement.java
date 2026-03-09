@@ -21,6 +21,7 @@ public class ProblemStatement {
     @Column(unique = true)
     private String psId;
     @NotNull
+    @Column(length = 2000)
     private String psTitle;
     @NotNull
     @Enumerated(EnumType.STRING)

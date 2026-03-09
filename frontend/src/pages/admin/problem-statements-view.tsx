@@ -62,6 +62,7 @@ export function ProblemStatementsView() {
   };
 
   const filteredProblems = problems.filter(ps => 
+    ps.psId.toLowerCase().includes(searchQuery.toLowerCase()) ||
     ps.psTitle.toLowerCase().includes(searchQuery.toLowerCase()) || 
     ps.theme.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -101,7 +102,7 @@ export function ProblemStatementsView() {
             <MagnifyingGlass size={16} weight="bold" />
           </InputGroupText>
           <Input 
-            placeholder="Search problems by title or theme..." 
+            placeholder="Search by ID, title or theme..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9 w-full"
@@ -122,7 +123,10 @@ export function ProblemStatementsView() {
           paginatedProblems.map((ps) => (
             <Card key={ps.psId}>
               <CardHeader>
-                <CardTitle>{ps.psTitle}</CardTitle>
+                <CardTitle className="line-clamp-2" title={ps.psTitle}>
+                  <span className="text-muted-foreground font-mono text-sm mr-2">[{ps.psId}]</span>
+                  {ps.psTitle}
+                </CardTitle>
                 <CardAction className="space-x-2">
                   <Button size="sm" variant="white" onClick={() => { setEditingProblem(ps); setIsEditOpen(true); }}>Edit</Button>
                   <Button size="sm" onClick={async () => {
@@ -138,12 +142,12 @@ export function ProblemStatementsView() {
                 </div>
                 <div className="flex justify-between">
                   <span className="font-semibold">PDF:</span>
-                  {ps.psPdfLink ? (
+                  {ps.psPdfLink && ps.psPdfLink.trim() !== "" ? (
                     <a href={ps.psPdfLink} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">
                       View PDF
                     </a>
                   ) : (
-                    "N/A"
+                    <span className="text-muted-foreground italic text-sm border px-2 py-0.5 rounded bg-muted/50">N/A</span>
                   )}
                 </div>
               </CardContent>
@@ -156,6 +160,7 @@ export function ProblemStatementsView() {
         <Table className="min-w-[600px]">
           <TableHeader>
             <TableRow>
+              <TableHead className="w-24">ID</TableHead>
               <TableHead>Title</TableHead>
               <TableHead>Theme</TableHead>
               <TableHead>PDF Link</TableHead>
@@ -178,15 +183,16 @@ export function ProblemStatementsView() {
             ) : (
               paginatedProblems.map((ps) => (
                 <TableRow key={ps.psId}>
-                  <TableCell className="font-medium">{ps.psTitle}</TableCell>
+                  <TableCell className="font-mono text-sm text-muted-foreground">{ps.psId}</TableCell>
+                  <TableCell className="font-medium max-w-xs truncate" title={ps.psTitle}>{ps.psTitle}</TableCell>
                   <TableCell>{ps.theme}</TableCell>
                   <TableCell>
-                    {ps.psPdfLink ? (
+                    {ps.psPdfLink && ps.psPdfLink.trim() !== "" ? (
                       <a href={ps.psPdfLink} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">
                         View PDF
                       </a>
                     ) : (
-                      "N/A"
+                      <span className="text-muted-foreground italic text-sm border px-2 py-0.5 rounded bg-muted/50">N/A</span>
                     )}
                   </TableCell>
                   <TableCell className="text-right space-x-2">

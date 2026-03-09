@@ -145,7 +145,8 @@ export function TeamsView() {
   const filteredTeams = teams.filter(t => 
     t.teamName.toLowerCase().includes(searchQuery.toLowerCase()) || 
     t.teamId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (t.psId && t.psId.toLowerCase().includes(searchQuery.toLowerCase()))
+    (t.psId && t.psId.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    t.theme.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredTeams.length / ITEMS_PER_PAGE) || 1;
@@ -282,7 +283,7 @@ export function TeamsView() {
             <MagnifyingGlass size={16} weight="bold" />
           </InputGroupText>
           <Input 
-            placeholder="Search teams by ID or name..." 
+            placeholder="Search teams by ID, name, PS ID, or theme..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9 w-full"
