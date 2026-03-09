@@ -6,8 +6,10 @@ import org.prathyushacampus.codeathonteamdashboardbackend.dto.RegisterTeamReques
 import org.prathyushacampus.codeathonteamdashboardbackend.dto.TeamDetailsDto;
 import org.prathyushacampus.codeathonteamdashboardbackend.dto.UpdateTeamVenueRequest;
 import org.prathyushacampus.codeathonteamdashboardbackend.model.Member;
+import org.prathyushacampus.codeathonteamdashboardbackend.model.ProblemStatement;
 import org.prathyushacampus.codeathonteamdashboardbackend.model.TeamDetails;
 import org.prathyushacampus.codeathonteamdashboardbackend.model.Theme;
+import org.prathyushacampus.codeathonteamdashboardbackend.repository.ProblemStatementRepository;
 import org.prathyushacampus.codeathonteamdashboardbackend.repository.TeamDetailsRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.List;
 public class AdminTeamService {
 
     private final TeamDetailsRepository teamDetailsRepository;
+    private final ProblemStatementRepository problemStatementRepository;
 
     public void registerTeam(RegisterTeamRequest request) {
         if (teamDetailsRepository.findById(request.getTeamId()).isPresent()) {
@@ -114,6 +117,21 @@ public class AdminTeamService {
 
         team.setMembers(new ArrayList<>(List.of(members)));
 
+        teamDetailsRepository.save(team);
+    }
+
+    public void updateTeamProblemStatement(String teamId, String psId) {
+        TeamDetails team = teamDetailsRepository.findById(teamId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team not found"));
+
+        ProblemStatement problemStatement = problemStatementRepository.findByPsId(psId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Problem statement not found"));
+
+        if (!team.getTheme().equals(problemStatement.getTheme())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Problem statement theme does not match team theme");
+        }
+
+        team.setProblemStatement(problemStatement);
         teamDetailsRepository.save(team);
     }
 }

@@ -61,6 +61,12 @@ public class AdminTeamController {
         return "Team " + teamId + " theme updated successfully";
     }
 
+    @PutMapping("/{teamId}/problem-statement")
+    @ResponseStatus(HttpStatus.OK)
+    public String updateTeamProblemStatement(@PathVariable String teamId, @RequestBody UpdateTeamProblemRequest request) {
+        adminTeamService.updateTeamProblemStatement(teamId, request.getPsId());
+        return "Problem statement for team " + teamId + " updated successfully";
+    }
 
     @PutMapping("/{teamId}/reset-passwd")
     @ResponseStatus(HttpStatus.OK)

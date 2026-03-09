@@ -2,13 +2,19 @@ import { useState } from "react"
 import { ModeToggle } from "@/components/mode-toggle"
 import { StrangeTitle } from "@/components/ui/strange-title"
 import { Button } from "@/components/ui/button"
-import { LogOut, Menu, X } from "lucide-react"
+import { LogOut, Menu, X, Users, FileText } from "lucide-react"
+import { useLocation, useSearchParams } from "react-router-dom"
 import { Description } from "./description"
 import { useAuthStore } from "@/lib/store"
 
 export function TopBar() {
   const [isOpen, setIsOpen] = useState(false)
   const { isAuthenticated, logout } = useAuthStore()
+  const location = useLocation()
+  const [searchParams, setSearchParams] = useSearchParams()
+  
+  const isAdminArea = location.pathname.startsWith("/admin")
+  const activeTab = searchParams.get("tab") === "problems" ? "problems" : "teams"
 
   const handleLogout = () => {
     logout()
@@ -24,10 +30,10 @@ export function TopBar() {
         </div>
 
         {/* Right: Desktop Actions */}
-        <div className="flex items-center gap-4 shrink-0">
+        <div className="hidden sm:flex items-center gap-4 shrink-0">
           <ModeToggle />
           {isAuthenticated && (
-            <Button className="hidden sm:flex" onClick={handleLogout}>
+            <Button onClick={handleLogout}>
               <LogOut className="w-4 h-4 mr-2" />
               Sign Out
             </Button>
@@ -46,6 +52,29 @@ export function TopBar() {
       {isOpen && (
         <div className="sm:hidden border-t border-border/40 bg-background/95 backdrop-blur absolute w-full left-0 top-16 shadow-md pb-4 pt-2">
           <div className="flex flex-col items-center gap-4 px-4">
+            
+            {/* Admin Mobile Navigation */}
+            {isAdminArea && isAuthenticated && (
+              <div className="flex flex-col gap-2 w-full border-b border-border/40 pb-4 mb-2">
+                <Button 
+                  variant={activeTab === "teams" ? "default" : "link"} 
+                  className="w-full justify-start" 
+                  onClick={() => { setSearchParams({ tab: "teams" }); setIsOpen(false); }}
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Manage Teams
+                </Button>
+                <Button 
+                  variant={activeTab === "problems" ? "default" : "link"} 
+                  className="w-full justify-start" 
+                  onClick={() => { setSearchParams({ tab: "problems" }); setIsOpen(false); }}
+                >
+                  <FileText className="w-4 h-4 mr-2" />
+                  Problem Statements
+                </Button>
+              </div>
+            )}
+
             <div className="flex w-full items-center justify-between p-2 rounded-md hover:bg-muted/50 border border-transparent">
               <Description size="lg" className="text-left">Theme</Description>
               <ModeToggle />

@@ -10,6 +10,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-transparent border-2 border-primary text-primary hover:bg-primary/15 shadow-[0_0_15px_var(--primary-color)] hover:shadow-[0_0_30px_var(--primary-color)] tracking-[0.15em] uppercase",
         link: "text-primary underline-offset-4 hover:underline",
+        white: ""
       },
       font: {
         default: "",
