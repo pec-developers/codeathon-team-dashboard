@@ -4,6 +4,7 @@ import { Login } from "./pages/login"
 import { ParticipantDashboard } from "./pages/participant/dashboard"
 import { AdminDashboard } from "./pages/admin/dashboard"
 import { ProtectedRoute } from "./components/protected-route"
+import { Toaster } from "@/components/ui/sonner"
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           </Routes>
         </main>
       </div>
+      <Toaster />
     </BrowserRouter>
   )
 }

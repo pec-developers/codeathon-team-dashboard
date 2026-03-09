@@ -2,7 +2,7 @@ import { useState } from "react"
 import { ModeToggle } from "@/components/mode-toggle"
 import { StrangeTitle } from "@/components/ui/strange-title"
 import { Button } from "@/components/ui/button"
-import { LogOut, Menu, X, Users, FileText } from "lucide-react"
+import { LogOut, Menu, X, Users, FileText, Info, Headset } from "lucide-react"
 import { useLocation, useSearchParams } from "react-router-dom"
 import { Description } from "./description"
 import { useAuthStore } from "@/lib/store"
@@ -15,6 +15,7 @@ export function TopBar() {
   
   const isAdminArea = location.pathname.startsWith("/admin")
   const activeTab = searchParams.get("tab") === "problems" ? "problems" : "teams"
+  const activeParticipantTab = searchParams.get("tab") || "team-details"
 
   const handleLogout = () => {
     logout()
@@ -71,6 +72,44 @@ export function TopBar() {
                 >
                   <FileText className="w-4 h-4 mr-2" />
                   Problem Statements
+                </Button>
+              </div>
+            )}
+
+            {/* Participant Mobile Navigation */}
+            {!isAdminArea && isAuthenticated && (
+              <div className="flex flex-col gap-2 w-full border-b border-border/40 pb-4 mb-2">
+                <Button 
+                  variant={activeParticipantTab === "team-details" ? "default" : "link"} 
+                  className="w-full justify-start" 
+                  onClick={() => { setSearchParams({ tab: "team-details" }); setIsOpen(false); }}
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Team Details
+                </Button>
+                <Button 
+                  variant={activeParticipantTab === "event-details" ? "default" : "link"} 
+                  className="w-full justify-start" 
+                  onClick={() => { setSearchParams({ tab: "event-details" }); setIsOpen(false); }}
+                >
+                  <Info className="w-4 h-4 mr-2" />
+                  Event Details
+                </Button>
+                {/* <Button 
+                  variant={activeParticipantTab === "leaderboard" ? "default" : "link"} 
+                  className="w-full justify-start" 
+                  onClick={() => { setSearchParams({ tab: "leaderboard" }); setIsOpen(false); }}
+                >
+                  <Trophy className="w-4 h-4 mr-2" />
+                  Leaderboard
+                </Button> */}
+                <Button 
+                  variant={activeParticipantTab === "contact" ? "default" : "link"} 
+                  className="w-full justify-start" 
+                  onClick={() => { setSearchParams({ tab: "contact" }); setIsOpen(false); }}
+                >
+                  <Headset className="w-4 h-4 mr-2" />
+                  Contact
                 </Button>
               </div>
             )}

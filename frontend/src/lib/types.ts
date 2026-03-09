@@ -61,6 +61,29 @@ export interface AllTeamDetailsResponse {
   teams: TeamDetailsDto[];
 }
 
+export interface TeamDashboardResponse {
+  teamId: string;
+  teamName: string;
+  isProfileCompleted: boolean;
+  members: MemberDto[];
+  theme: Theme;
+  psReleased: boolean;
+  psFinalized: boolean;
+  problemStatements: ProblemStatementDto[];
+  buildingName: string;
+  floor: string;
+  tableNumber: string;
+}
+
+export interface LeaderBoardTeamDto {
+  teamName: string;
+  score: number;
+}
+
+export interface LeaderBoardResponse {
+  teams: LeaderBoardTeamDto[];
+}
+
 export interface UpdateTeamVenueRequest {
   buildingName: string;
   floor: string;
