@@ -5,7 +5,7 @@ import { EventDetailsView } from "./event-details-view.tsx";
 import { LeaderboardView } from "./leaderboard-view.tsx";
 import { ContactView } from "./contact-view.tsx";
 import { ResourceHubView } from "./resource-hub-view.tsx";
-import { Users, Info, Headset, Zap } from "lucide-react";
+import { Users, Info, Headset, Zap, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function ParticipantDashboard() {
