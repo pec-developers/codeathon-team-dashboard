@@ -5,7 +5,7 @@ import { EventDetailsView } from "./event-details-view.tsx";
 import { LeaderboardView } from "./leaderboard-view.tsx";
 import { ContactView } from "./contact-view.tsx";
 import { ResourceHubView } from "./resource-hub-view.tsx";
-import { Users, Info, Headset, Zap } from "lucide-react";
+import { Users, Info, Headset, Zap, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function ParticipantDashboard() {
@@ -73,7 +73,7 @@ export function ParticipantDashboard() {
           Event Details
         </button>
 
-        {/* <button
+        <button
           onClick={() => setSearchParams({ tab: "leaderboard" })}
           className={cn(
             "flex items-center gap-3 px-4 py-3 rounded-md transition-colors text-sm font-medium whitespace-nowrap",
@@ -84,7 +84,7 @@ export function ParticipantDashboard() {
         >
           <Trophy className="w-4 h-4 shrink-0" />
           Leaderboard
-        </button> */}
+        </button>
 
         <button
           onClick={() => setSearchParams({ tab: "contact" })}
